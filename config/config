@@ -1,0 +1,28 @@
+#
+#   config file(toml) for ASM
+#
+
+[DBConfig]
+    Type        = "mysql"
+    Host        = "127.0.0.1"
+    Name        = "ASMDB"
+    Port        = "3306"
+    User        = "root"
+    Pass        = "test"
+
+[AdminConfig]
+    Name        = "admin"
+    Pass        = "password"
+
+[MachineConfig]
+    KindOfDrink = 16
+
+[network]
+    AllowDomain = [
+        "127.0.0.1",
+        "localhost"
+    ]
+    AllowHTTP   = true
+    HTTPPort    = 9999
+    AllowHTTPS  = false
+    HTTPSPort   = 8888
