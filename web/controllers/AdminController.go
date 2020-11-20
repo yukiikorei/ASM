@@ -21,8 +21,9 @@ type AdminController struct {
 	Ctx iris.Context
 }
 
+// set middleware
 func (c *AdminController) BeforeActivation(b mvc.BeforeActivation)  {
-	// add basic auth middleware
+	//1. add basic auth middleware
 	authConfig := basicauth.Config{
 		Users: map[string]string{
 			config.GlobalConfig.AdminConfig.Name : config.GlobalConfig.AdminConfig.Pass,
@@ -32,6 +33,17 @@ func (c *AdminController) BeforeActivation(b mvc.BeforeActivation)  {
 	}
 	authentication := basicauth.New(authConfig)
 	b.Router().Use(authentication)
+
+	//2. open machine middleware
+	b.Router().Use(func(ctx iris.Context) {
+		m := services.MachineServices{}
+		if m.IsOpen() || ctx.Path()=="/admin/open"{
+			ctx.Next()
+		}else{
+			ctx.View("open.html",iris.Map{"content":""})
+		}
+	})
+
 }
 
 func (c *AdminController) Get() (result mvc.Result){
@@ -48,10 +60,27 @@ func (c *AdminController) Get() (result mvc.Result){
 	}
 }
 
-func (c *AdminController) Post() (result mvc.Result){
+func (c *AdminController) GetOpen() (result mvc.Result){
+	m := services.MachineServices{}
+	suc := m.TryOpen()
+	if suc {
+		c.Ctx.Redirect("/admin")
+		return
+	}else{
+		return mvc.View{
+			Name: "/admin/open.html",
+			Data: iris.Map{
+				"content" : "machine is working",
+			},
+			Layout: "open.html",
+		}
+	}
+}
 
-
-	return c.Get()
+func (c *AdminController) GetClose()  {
+	m := services.MachineServices{}
+	m.Close()
+	c.Ctx.Redirect("/admin")
 }
 
 func (c *AdminController) PostUpdate()  {
@@ -75,6 +104,5 @@ func (c *AdminController) PostUpdate()  {
 }
 
 func (c *AdminController) PostUpload() (result mvc.Result){
-
 	return c.Get()
 }

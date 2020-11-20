@@ -17,12 +17,12 @@
 [MachineConfig]
     KindOfDrink = 16
 
-[network]
-    AllowDomain = [
-        "127.0.0.1",
-        "localhost"
-    ]
-    AllowHTTP   = true
-    HTTPPort    = 9999
-    AllowHTTPS  = false
-    HTTPSPort   = 8888
+#[network]
+#    AllowDomain = [
+#        "127.0.0.1",
+#        "localhost"
+#    ]
+#    AllowHTTP   = true
+#    HTTPPort    = 10101
+#    AllowHTTPS  = false
+#    HTTPSPort   = 
